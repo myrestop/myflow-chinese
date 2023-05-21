@@ -3,7 +3,7 @@ name: chinese
 names:
   ZH_CN: 汉字处理
   ZH_TW: 漢字處理
-entry: myflow-chinese-1.0.0.jar
+entry: myflow-chinese.jar
 version: 1.0.0
 logo: ./logos/chinese.png
 homepage: https://myrest.top/myflow/plugins/chinese
