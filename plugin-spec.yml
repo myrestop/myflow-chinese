@@ -6,7 +6,6 @@ names:
 entry: ./myflow-chinese.jar
 version: 1.0.0
 logo: ./logos/chinese.png
-homepage: https://myrest.top/myflow/plugins/chinese
 compatible-version:
   since-build: 0
   until-build: 2147483647
