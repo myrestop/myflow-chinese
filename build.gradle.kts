@@ -51,7 +51,7 @@ tasks.build {
             if (it.startsWith("version:")) {
                 "version: $version"
             } else if (it.startsWith("entry:")) {
-                "entry: $entry"
+                "entry: ./$entry"
             } else it
         }
         specFile.writeText(specContent, Charsets.UTF_8)

@@ -1,9 +1,9 @@
 id: top.myrest.myflow.chinese
-name: chinese
+name: Chinese
 names:
   ZH_CN: 汉字处理
   ZH_TW: 漢字處理
-entry: myflow-chinese.jar
+entry: ./myflow-chinese.jar
 version: 1.0.0
 logo: ./logos/chinese.png
 homepage: https://myrest.top/myflow/plugins/chinese
@@ -29,13 +29,16 @@ language-bundle-name: top.myrest.myflow.chinese.LanguageBundle
 actions:
   - keywords:
       - pinyin
+    logo: ./logos/pinyin.png
     handler-class-name: top.myrest.myflow.chinese.PinyinActionHandler
     description-bundle-id: pinyin-description
   - keywords:
       - simplify
+    logo: ./logos/simplified.jpg
     handler-class-name: top.myrest.myflow.chinese.ToSimplifiedChinese
     description-bundle-id: simplified-description
   - keywords:
       - tradition
+    logo: ./logos/traditional.jpg
     handler-class-name: top.myrest.myflow.chinese.ToTraditionalChinese
     description-bundle-id: traditional-description
