@@ -42,13 +42,13 @@ class PinyinActionHandler : BaseDigestActionHandler() {
         return result.toString()
     }
 
-    override fun queryDigestAction(content: String) = basicCopyResult(logo = "./logos/pinyin.png", result = getPinyin(content))
+    override fun queryDigestAction(content: String) = basicCopyResult(actionId = "pinyin", logo = "./logos/pinyin.png", result = getPinyin(content))
 }
 
 class ToTraditionalChinese : BaseDigestActionHandler() {
-    override fun queryDigestAction(content: String): ActionResult = basicCopyResult(logo = "./logos/traditional.jpg", result = ZhConverterUtil.toTraditional(content))
+    override fun queryDigestAction(content: String): ActionResult = basicCopyResult(actionId = "tradition", logo = "./logos/traditional.jpg", result = ZhConverterUtil.toTraditional(content))
 }
 
 class ToSimplifiedChinese : BaseDigestActionHandler() {
-    override fun queryDigestAction(content: String): ActionResult = basicCopyResult(logo = "./logos/simplified.jpg", result = ZhConverterUtil.toSimple(content))
+    override fun queryDigestAction(content: String): ActionResult = basicCopyResult(actionId = "simple", logo = "./logos/simplified.jpg", result = ZhConverterUtil.toSimple(content))
 }
