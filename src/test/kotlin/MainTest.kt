@@ -9,5 +9,5 @@ fun main() {
     DevProps.disableNativeListener = true
     DevProps.compiledClassDir = "D:\\MyProjects\\myflow-chinese\\build\\classes\\kotlin\\main"
     FlowApp().configApp()
-    App(AppInfo.appName + "Chinese")
+    App(AppInfo.APP_NAME + "Chinese")
 }
