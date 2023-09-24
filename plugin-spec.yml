@@ -1,8 +1,8 @@
 id: top.myrest.myflow.chinese
-name: Chinese
+name: Chinese Processor
 names:
-  ZH_CN: 汉字处理
-  ZH_TW: 漢字處理
+  ZH_CN: 汉字处理器
+  ZH_TW: 漢字處理器
 entry: ./myflow-chinese.jar
 version: 1.0.0
 logo: ./logos/chinese.png
@@ -24,20 +24,19 @@ languages:
   - EN_US
   - ZH_CN
   - ZH_TW
-language-bundle-name: top.myrest.myflow.chinese.LanguageBundle
 actions:
   - keywords:
       - pinyin
     logo: ./logos/pinyin.png
     handler: top.myrest.myflow.chinese.PinyinActionHandler
-    description-bundle-id: desc.pinyin
+    name-bundle-id: pinyin
   - keywords:
       - simplify
     logo: ./logos/simplified.jpg
     handler: top.myrest.myflow.chinese.ToSimplifiedChinese
-    description-bundle-id: desc.simplified
+    name-bundle-id: simplified
   - keywords:
       - tradition
     logo: ./logos/traditional.jpg
     handler: top.myrest.myflow.chinese.ToTraditionalChinese
-    description-bundle-id: desc.traditional
+    name-bundle-id: traditional
