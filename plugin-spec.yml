@@ -1,8 +1,8 @@
 id: top.myrest.myflow.chinese
 name: Chinese Processor
 names:
-  ZH_CN: 汉字处理器
-  ZH_TW: 漢字處理器
+  ZH_CN: 中文处理器
+  ZH_TW: 中文處理器
 entry: ./myflow-chinese.jar
 version: 1.0.0
 logo: ./logos/chinese.png
@@ -25,6 +25,11 @@ languages:
   - ZH_CN
   - ZH_TW
 actions:
+  - keywords:
+      - '*'
+    logo: ./logos/ch.png
+    handler: top.myrest.myflow.chinese.ChineseSuggestionActionHandler
+    name-bundle-id: chinese-suggestion
   - keywords:
       - pinyin
     logo: ./logos/pinyin.png
