@@ -9,7 +9,6 @@ import top.myrest.myflow.action.ActionParam
 import top.myrest.myflow.action.ActionRequireArgHandler
 import top.myrest.myflow.action.ActionResult
 import top.myrest.myflow.action.ActionResultSelectionWrapper
-import top.myrest.myflow.action.Actions
 import top.myrest.myflow.action.asSuggestionResult
 import top.myrest.myflow.action.plain
 import top.myrest.myflow.action.singleCallback
@@ -39,40 +38,35 @@ class ChineseSuggestionActionHandler : ActionRequireArgHandler() {
     }
 
     private fun suggest(param: ActionParam): List<ActionResult> {
-        val firstArg = param.args.first()
-        if (!firstArg.type.isString()) {
-            return emptyList()
-        }
+        val prefixKey = param.args.first().strValue
+        val prefixArgs = param.args.drop(1)
+        val suffixKey = if (param.args.size > 1) param.args.last().strValue else ""
+        val suffixArgs = param.args.dropLast(1)
 
-        val key = firstArg.strValue.lowercase()
-        if (key == AppConsts.ANY_KEYWORD || !Actions.isKeywordValid(key)) {
-            return emptyList()
-        }
-
-        val args = param.args.drop(1)
         return Plugins.listPluginInfo(true).flatMap { p ->
-            p.specification.actions.flatMap { k ->
+            p.specification.actions.mapNotNull { k ->
                 if (AppInfo.runtimeProps.disabledActionHandlers.contains(k.handler) || k.nameBundleId.isEmpty() || k.getUserKeywords().any { it == AppConsts.ANY_KEYWORD }) {
                     // disabled, or no name bundle id, or has any keyword
-                    emptyList<ActionResult>()
+                    null
                 } else {
-                    val name = LanguageBundle.getById(p.languageBundle, k.nameBundleId)
-                    if (name == k.nameBundleId) {
-                        // no language file
-                        emptyList<ActionResult>()
+                    val handler = p.actionHandlerMap[k.handler]
+                    if (handler == null || handler is ChineseSuggestionActionHandler) {
+                        null
                     } else {
+                        val name = LanguageBundle.getById(p.languageBundle, k.nameBundleId)
                         val pinyin = getPinyin(name)
                         if (pinyin.isEmpty()) {
                             // no chinese character
-                            emptyList<ActionResult>()
+                            null
                         } else {
-                            val (match, score) = isMatch(key, name, pinyin)
-                            val handler = p.actionHandlerMap[k.handler]
-                            if (match && handler != null && handler !is ChineseSuggestionActionHandler) {
-                                val result = mapResult(p, k, name, handler, param, k.getUserKeywords().firstOrNull() ?: "", args, score)
-                                listOf(result)
+                            var match = isMatch(prefixKey, name, pinyin)
+                            if (match.first) {
+                                mapResult(p, k, name, handler, param, k.getUserKeywords().firstOrNull() ?: "", prefixArgs, match.second, true)
                             } else {
-                                emptyList<ActionResult>()
+                                match = isMatch(suffixKey, name, pinyin)
+                                if (match.first) {
+                                    mapResult(p, k, name, handler, param, k.getUserKeywords().firstOrNull() ?: "", suffixArgs, match.second, false)
+                                } else null
                             }
                         }
                     }
@@ -90,12 +84,13 @@ class ChineseSuggestionActionHandler : ActionRequireArgHandler() {
         keyword: String,
         args: List<ActionParam.Arg>,
         score: Int,
-    ): ActionResult {
+        prefix: Boolean,
+    ): ActionResult? {
         val actionParam = param.copy(keyword = keyword, args = args, limit = 1)
-        val actionResults = info.runWithLoader {
+        val results = info.runWithLoader {
             handler.queryAction(actionParam)
         } ?: emptyList()
-        return if (actionResults.isEmpty()) {
+        return if (results.isEmpty() && actionParam.args.isEmpty()) {
             val logo = StrUtil.emptyToDefault(action.logo, "logos/suggestion.png")
             ActionResult(
                 actionId = "suggestion:$keyword",
@@ -112,12 +107,15 @@ class ChineseSuggestionActionHandler : ActionRequireArgHandler() {
                     showNotify = false,
                 ),
             )
-        } else {
-            var head = actionResults.first()
+        } else if (results.isNotEmpty()) {
+            var head = results.first()
             head.pluginId = info.specification.id
+            val argStr = args.joinToString(separator = " ") { g -> g.strValue }
             head = head.copy(
                 logo = Composes.resolveLogo(info.specification.id, action.handler, head.logo).first,
-                result = head.result.asSuggestionResult(name + " " + args.joinToString(separator = " ") { g -> g.strValue }),
+                result = head.result.asSuggestionResult(
+                    if (prefix) "$name $argStr " else "$argStr $name",
+                ),
             )
             ActionResultSelectionWrapper(
                 actionId = head.actionId,
@@ -128,10 +126,13 @@ class ChineseSuggestionActionHandler : ActionRequireArgHandler() {
                 resultOnSelect = head,
                 score = score,
             )
-        }
+        } else null
     }
 
     private fun isMatch(key: String, chinese: String, pinyin: List<String>): Pair<Boolean, Int> {
+        if (key.isBlank() || chinese.isBlank()) {
+            return false to 0
+        }
         var score = 60
         var match = false
         if (chinese.startsWith(key)) {
