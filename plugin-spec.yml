@@ -9,7 +9,6 @@ logo: ./logos/chinese.png
 compatible-version:
   since-build: 0
   until-build: 2147483647
-description-filename: description.md
 owner:
   name: myrest
   email: myflow@myrest.top
@@ -20,10 +19,7 @@ platforms:
   - WINDOWS
   - MACOS
   - LINUX
-languages:
-  - EN_US
-  - ZH_CN
-  - ZH_TW
+translator: top.myrest.myflow.chinese.ChineseTranslator
 actions:
   - keywords:
       - '*'

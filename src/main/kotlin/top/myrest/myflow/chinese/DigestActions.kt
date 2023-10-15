@@ -11,6 +11,8 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType
 import top.myrest.myflow.action.ActionResult
 import top.myrest.myflow.action.BaseDigestActionHandler
 import top.myrest.myflow.action.basicCopyResult
+import top.myrest.myflow.enumeration.LanguageType
+import top.myrest.myflow.language.Translator
 
 class PinyinActionHandler : BaseDigestActionHandler() {
 
@@ -54,4 +56,24 @@ class ToTraditionalChinese : BaseDigestActionHandler() {
 
 class ToSimplifiedChinese : BaseDigestActionHandler() {
     override fun queryDigestAction(content: String): ActionResult = basicCopyResult(actionId = "simple", logo = "./logos/simplified.jpg", result = ZhConverterUtil.toSimple(content))
+}
+
+class ChineseTranslator : Translator {
+
+    private val types = listOf(LanguageType.ZH_CN, LanguageType.ZH_TW)
+
+    override fun getSupportLanguages(): List<LanguageType> = types
+
+    override fun translate(text: String, sourceLanguage: LanguageType, targetLanguage: LanguageType): String {
+        if (text.isBlank()) {
+            return text
+        }
+        if (sourceLanguage == LanguageType.ZH_CN && targetLanguage == LanguageType.ZH_TW) {
+            return ZhConverterUtil.toTraditional(text)
+        }
+        if (sourceLanguage == LanguageType.ZH_TW && targetLanguage == LanguageType.ZH_CN) {
+            return ZhConverterUtil.toSimple(text)
+        }
+        return text
+    }
 }
