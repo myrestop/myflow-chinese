@@ -18,7 +18,9 @@ platforms:
   - WINDOWS
   - MACOS
   - LINUX
-translator: top.myrest.myflow.chinese.ChineseTranslator
+translator:
+  name-bundle-id: converter
+  translator: top.myrest.myflow.chinese.ChineseTranslator
 actions:
   - keywords:
       - '*'
