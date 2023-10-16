@@ -9,6 +9,7 @@ import top.myrest.myflow.action.ActionParam
 import top.myrest.myflow.action.ActionRequireArgHandler
 import top.myrest.myflow.action.ActionResult
 import top.myrest.myflow.action.ActionResultSelectionWrapper
+import top.myrest.myflow.action.Actions
 import top.myrest.myflow.action.asSuggestionResult
 import top.myrest.myflow.action.plain
 import top.myrest.myflow.action.singleCallback
@@ -130,7 +131,7 @@ class ChineseSuggestionActionHandler : ActionRequireArgHandler() {
     }
 
     private fun isMatch(key: String, chinese: String, pinyin: List<String>): Pair<Boolean, Int> {
-        if (key.isBlank() || chinese.isBlank()) {
+        if (key.isBlank() || chinese.isBlank() || !Actions.isKeywordValid(key)) {
             return false to 0
         }
         var score = 60
