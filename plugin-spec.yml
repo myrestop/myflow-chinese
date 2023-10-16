@@ -2,7 +2,6 @@ id: top.myrest.myflow.chinese
 name: Chinese Processor
 names:
   ZH_CN: 中文处理器
-  ZH_TW: 中文處理器
 entry: ./myflow-chinese.jar
 version: 1.0.0
 logo: ./logos/chinese.png
