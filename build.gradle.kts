@@ -1,3 +1,6 @@
+import java.io.FileOutputStream
+import java.util.zip.ZipEntry
+import java.util.zip.ZipOutputStream
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -56,5 +59,35 @@ tasks.build {
         }
         specFile.writeText(specContent, Charsets.UTF_8)
         specFile.appendText(System.lineSeparator())
+    }
+}
+
+tasks.register("packagePlugin") {
+    group = "build"
+    description = "Package as runflow plugin zip file."
+    dependsOn("build")
+    doLast {
+        val zipFile = file("./runflow-plugin.zip")
+        val zip = ZipOutputStream(FileOutputStream(zipFile))
+        val files = mutableListOf(
+            file(entry) to entry,
+            file("plugin-spec.yml") to "plugin-spec.yml",
+            file("description_en_us.md") to "description_en_us.md",
+            file("description_zh_cn.md") to "description_zh_cn.md",
+        )
+        file("language").listFiles()?.forEach {
+            files.add(it to "language/${it.name}")
+        }
+        file("logos").listFiles()?.forEach {
+            files.add(it to "logos/${it.name}")
+        }
+        files.filter {
+            it.first.exists()
+        }.forEach {
+            zip.putNextEntry(ZipEntry(it.second))
+            zip.write(it.first.readBytes())
+        }
+        zip.closeEntry()
+        zip.close()
     }
 }
