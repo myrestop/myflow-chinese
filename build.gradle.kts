@@ -4,8 +4,8 @@ import java.util.zip.ZipOutputStream
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.8.20"
-    id("org.jetbrains.compose") version "1.4.0"
+    kotlin("jvm") version "1.9.22"
+    id("org.jetbrains.compose") version "1.5.12"
 }
 
 group = "top.myrest"
@@ -19,13 +19,15 @@ repositories {
     google()
 }
 
+val myflowVersion = "1.0.6"
+var myflowDependency: Dependency? = null
+var jetbrainsComposeDependency: Dependency? = null
 dependencies {
-    compileOnly(compose.desktop.currentOs)
-    compileOnly("top.myrest:myflow-kit:1.0.0")
     implementation("com.belerweb:pinyin4j:2.5.1")
     implementation("com.github.houbb:opencc4j:1.8.1")
-    testImplementation("top.myrest:myflow-baseimpl:1.0.0")
-    testImplementation(kotlin("test"))
+    jetbrainsComposeDependency = implementation(compose.desktop.currentOs)
+    myflowDependency = implementation("top.myrest:myflow-kit:$myflowVersion")
+    testImplementation("top.myrest:myflow-baseimpl:$myflowVersion")
 }
 
 tasks.withType<KotlinCompile> {
@@ -34,13 +36,22 @@ tasks.withType<KotlinCompile> {
 
 tasks.jar {
     archiveFileName.set(entry)
-    from(
-        configurations.runtimeClasspath.get().allDependencies.flatMap { dependency ->
-            configurations.runtimeClasspath.get().files(dependency).map { file ->
-                if (file.isDirectory) file else zipTree(file)
+    val exists = mutableSetOf<String>()
+    val files = mutableListOf<Any>()
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    configurations.runtimeClasspath.get().allDependencies.forEach { dependency ->
+        if (dependency == myflowDependency || dependency == jetbrainsComposeDependency) {
+            return@forEach
+        }
+        println(dependency)
+        configurations.runtimeClasspath.get().files(dependency).forEach { file ->
+            if (exists.add(file.name)) {
+                println(file.name)
+                files.add(if (file.isDirectory) file else zipTree(file))
             }
-        },
-    )
+        }
+    }
+    from(files)
 }
 
 tasks.build {
