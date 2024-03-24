@@ -1,5 +1,7 @@
 package top.myrest.myflow.chinese
 
+import java.io.File
+import cn.hutool.core.io.FileUtil
 import cn.hutool.core.util.ArrayUtil
 import cn.hutool.core.util.StrUtil
 import com.github.houbb.opencc4j.util.ZhConverterUtil
@@ -10,6 +12,7 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinToneType
 import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType
 import top.myrest.myflow.action.ActionResult
 import top.myrest.myflow.action.BaseDigestActionHandler
+import top.myrest.myflow.action.asSaveFileResult
 import top.myrest.myflow.action.basicCopyResult
 import top.myrest.myflow.enumeration.LanguageType
 import top.myrest.myflow.language.Translator
@@ -38,6 +41,8 @@ class PinyinActionHandler : BaseDigestActionHandler() {
 
     override fun queryDigestAction(content: String) = basicCopyResult(actionId = "pinyin", logo = "./logos/pinyin.png", result = getPinyin(content))
 
+    override fun queryFileDigestAction(file: File): ActionResult = basicCopyResult(actionId = "pinyin", logo = "./logos/pinyin.png", result = getPinyin(FileUtil.readUtf8String(file)).asSaveFileResult())
+
     companion object {
 
         internal val format = HanyuPinyinOutputFormat()
@@ -52,10 +57,12 @@ class PinyinActionHandler : BaseDigestActionHandler() {
 
 class ToTraditionalChinese : BaseDigestActionHandler() {
     override fun queryDigestAction(content: String): ActionResult = basicCopyResult(actionId = "tradition", logo = "./logos/traditional.jpg", result = ZhConverterUtil.toTraditional(content))
+    override fun queryFileDigestAction(file: File): ActionResult = basicCopyResult(actionId = "tradition", logo = "./logos/traditional.jpg", result = ZhConverterUtil.toTraditional(FileUtil.readUtf8String(file)).asSaveFileResult())
 }
 
 class ToSimplifiedChinese : BaseDigestActionHandler() {
     override fun queryDigestAction(content: String): ActionResult = basicCopyResult(actionId = "simple", logo = "./logos/simplified.jpg", result = ZhConverterUtil.toSimple(content))
+    override fun queryFileDigestAction(file: File): ActionResult = basicCopyResult(actionId = "simple", logo = "./logos/simplified.jpg", result = ZhConverterUtil.toSimple(FileUtil.readUtf8String(file)).asSaveFileResult())
 }
 
 class ChineseTranslator : Translator {

@@ -3,11 +3,11 @@ name: Chinese Processor
 names:
   ZH_CN: 中文处理器
 entry: ./myflow-chinese.jar
-version: 1.0.0
+version: 1.0.1
 logo: ./logos/chinese.png
 compatible-version:
-  since-build: 1
-  until-build: 362
+  since-build: 477
+  until-build: 477
 owner:
   name: myrest
   email: mrpan@myrest.top
