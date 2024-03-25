@@ -1,5 +1,5 @@
 pinyin: 拼音
 simplified: 简体中文
 traditional: 繁体中文
-chinese-suggestion: 中文关键字建议
+chinese-matcher: 中文与拼音匹配
 converter: 简体中文与繁体中文转换器

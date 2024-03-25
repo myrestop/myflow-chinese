@@ -19,11 +19,19 @@ import top.myrest.myflow.language.Translator
 
 class PinyinActionHandler : BaseDigestActionHandler() {
 
+    private val format = HanyuPinyinOutputFormat()
+
+    init {
+        format.caseType = HanyuPinyinCaseType.LOWERCASE
+        format.toneType = HanyuPinyinToneType.WITH_TONE_MARK
+        format.vCharType = HanyuPinyinVCharType.WITH_V
+    }
+
     private fun getPinyin(str: String): String {
         val result = StrUtil.strBuilder()
         var isFirst = true
         val strLen = str.length
-        for (i in 0 until strLen) {
+        for (i in 0..<strLen) {
             if (isFirst) {
                 isFirst = false
             } else {
@@ -42,17 +50,6 @@ class PinyinActionHandler : BaseDigestActionHandler() {
     override fun queryDigestAction(content: String) = basicCopyResult(actionId = "pinyin", logo = "./logos/pinyin.png", result = getPinyin(content))
 
     override fun queryFileDigestAction(file: File): ActionResult = basicCopyResult(actionId = "pinyin", logo = "./logos/pinyin.png", result = getPinyin(FileUtil.readUtf8String(file)).asSaveFileResult())
-
-    companion object {
-
-        internal val format = HanyuPinyinOutputFormat()
-
-        init {
-            format.caseType = HanyuPinyinCaseType.LOWERCASE
-            format.toneType = HanyuPinyinToneType.WITHOUT_TONE
-            format.vCharType = HanyuPinyinVCharType.WITH_V
-        }
-    }
 }
 
 class ToTraditionalChinese : BaseDigestActionHandler() {

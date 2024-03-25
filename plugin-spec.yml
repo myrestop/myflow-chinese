@@ -18,15 +18,13 @@ platforms:
   - WINDOWS
   - MACOS
   - LINUX
-translator:
-  name-bundle-id: converter
-  service: top.myrest.myflow.chinese.ChineseTranslator
+translators:
+  - name-bundle-id: converter
+    service: top.myrest.myflow.chinese.ChineseTranslator
+localization-matchers:
+  - name-bundle-id: chinese-matcher
+    service: top.myrest.myflow.chinese.ChineseLocalizationMatcher
 actions:
-  - keywords:
-      - '*'
-    logo: ./logos/ch.png
-    handler: top.myrest.myflow.chinese.ChineseSuggestionActionHandler
-    name-bundle-id: chinese-suggestion
   - keywords:
       - pinyin
     logo: ./logos/pinyin.png
