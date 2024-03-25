@@ -24,7 +24,7 @@ class PinyinActionHandler : BaseDigestActionHandler() {
     init {
         format.caseType = HanyuPinyinCaseType.LOWERCASE
         format.toneType = HanyuPinyinToneType.WITH_TONE_MARK
-        format.vCharType = HanyuPinyinVCharType.WITH_V
+        format.vCharType = HanyuPinyinVCharType.WITH_U_UNICODE
     }
 
     private fun getPinyin(str: String): String {

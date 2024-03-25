@@ -75,16 +75,16 @@ class ChineseLocalizationMatcher : LocalizationMatcher {
                 score += 30 + keyword.length - full.length
                 match = true
             } else if (idx > 0) {
-                var start = 0
-                var end = 0
                 var acc = 0
+                var start = 0
+                var end = content.lastIndex
                 val stop = idx + len
                 for ((i, s) in pinyin.withIndex()) {
                     acc += s.length
                     if (acc > idx && start == 0) {
                         start = i
                     }
-                    if (acc > stop) {
+                    if (acc >= stop) {
                         end = i
                         break
                     }
@@ -99,7 +99,7 @@ class ChineseLocalizationMatcher : LocalizationMatcher {
             val prefix = pinyin.joinToString(separator = "") { it.first().toString() }
             idx = prefix.indexOf(keyword)
             if (idx == 0) {
-                titles = listOf(content.substring(keyword.length).highlight, content.substring(keyword.length).plain)
+                titles = listOf(content.substring(0, keyword.length).highlight, content.substring(keyword.length).plain)
                 score += 40 + (keyword.length - prefix.length) * 3
                 match = true
             } else if (idx > 0) {
@@ -108,7 +108,10 @@ class ChineseLocalizationMatcher : LocalizationMatcher {
                 match = true
             }
         }
-        return LocalizationMatchResult(match, titles, score)
+        if (match) {
+            return LocalizationMatchResult(true, titles.filter { it.value.isNotEmpty() }, score)
+        }
+        return LocalizedMatching.notMatched
     }
 
     private fun getPinyin(str: String): List<String> {
