@@ -5,6 +5,7 @@ names:
 entry: ./myflow-chinese.jar
 version: 1.0.1
 logo: ./logos/chinese.png
+source-code: https://github.com/myrestop/myflow-chinese
 compatible-version:
   since-build: 477
   until-build: 477
