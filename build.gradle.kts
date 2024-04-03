@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "top.myrest"
-version = "1.0.1"
+version = "1.0.2"
 val entry = "$name.jar"
 
 repositories {
@@ -19,7 +19,7 @@ repositories {
     google()
 }
 
-val myflowVersion = "1.0.9"
+val myflowVersion = "1.0.12"
 var myflowDependency: Dependency? = null
 var jetbrainsComposeDependency: Dependency? = null
 dependencies {

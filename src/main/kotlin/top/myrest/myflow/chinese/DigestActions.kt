@@ -1,7 +1,6 @@
 package top.myrest.myflow.chinese
 
 import java.io.File
-import cn.hutool.core.io.FileUtil
 import cn.hutool.core.util.ArrayUtil
 import cn.hutool.core.util.StrUtil
 import com.github.houbb.opencc4j.util.ZhConverterUtil
@@ -16,6 +15,7 @@ import top.myrest.myflow.action.asSaveFileResult
 import top.myrest.myflow.action.basicCopyResult
 import top.myrest.myflow.enumeration.LanguageType
 import top.myrest.myflow.language.Translator
+import top.myrest.myflow.util.FileUtils
 
 class PinyinActionHandler : BaseDigestActionHandler() {
 
@@ -49,17 +49,17 @@ class PinyinActionHandler : BaseDigestActionHandler() {
 
     override fun queryDigestAction(content: String) = basicCopyResult(actionId = "pinyin", logo = "./logos/pinyin.png", result = getPinyin(content))
 
-    override fun queryFileDigestAction(file: File): ActionResult = basicCopyResult(actionId = "pinyin", logo = "./logos/pinyin.png", result = getPinyin(FileUtil.readUtf8String(file)).asSaveFileResult())
+    override fun queryFileDigestAction(file: File): ActionResult = basicCopyResult(actionId = "pinyin", logo = "./logos/pinyin.png", result = getPinyin(FileUtils.readByFileCharset(file)).asSaveFileResult())
 }
 
 class ToTraditionalChinese : BaseDigestActionHandler() {
     override fun queryDigestAction(content: String): ActionResult = basicCopyResult(actionId = "tradition", logo = "./logos/traditional.jpg", result = ZhConverterUtil.toTraditional(content))
-    override fun queryFileDigestAction(file: File): ActionResult = basicCopyResult(actionId = "tradition", logo = "./logos/traditional.jpg", result = ZhConverterUtil.toTraditional(FileUtil.readUtf8String(file)).asSaveFileResult())
+    override fun queryFileDigestAction(file: File): ActionResult = basicCopyResult(actionId = "tradition", logo = "./logos/traditional.jpg", result = ZhConverterUtil.toTraditional(FileUtils.readByFileCharset(file)).asSaveFileResult())
 }
 
 class ToSimplifiedChinese : BaseDigestActionHandler() {
     override fun queryDigestAction(content: String): ActionResult = basicCopyResult(actionId = "simple", logo = "./logos/simplified.jpg", result = ZhConverterUtil.toSimple(content))
-    override fun queryFileDigestAction(file: File): ActionResult = basicCopyResult(actionId = "simple", logo = "./logos/simplified.jpg", result = ZhConverterUtil.toSimple(FileUtil.readUtf8String(file)).asSaveFileResult())
+    override fun queryFileDigestAction(file: File): ActionResult = basicCopyResult(actionId = "simple", logo = "./logos/simplified.jpg", result = ZhConverterUtil.toSimple(FileUtils.readByFileCharset(file)).asSaveFileResult())
 }
 
 class ChineseTranslator : Translator {
